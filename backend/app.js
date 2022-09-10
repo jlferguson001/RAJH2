@@ -21,11 +21,17 @@ connectToDb((err) => {
 //routes
 
 app.get('/products', (req, res) => {
+    //current page
+    const page = req.query.p || 0
+    const productsPerPage = 3
+
     let products = []
 
     db.collection('products')
     .find()
     .sort({category: 1})
+    .limit(productsPerPage)
+    .skip(page * productsPerPage)
     .forEach(product =>  products.push(product))
     .then(() => {
         res.status(200).json(products)
